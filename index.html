@@ -473,6 +473,84 @@
       font-size: 15px;
     }
 
+    /* Changelog */
+    .changelog-section {
+      padding: 80px 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .changelog-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .changelog-item {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 36px;
+      border-left: 2px solid var(--border);
+    }
+    .changelog-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+    .changelog-item.latest::before {
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.15);
+    }
+    .changelog-ver {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .changelog-ver .cl-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 980px;
+      background: rgba(52, 199, 89, 0.1);
+      color: var(--green);
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .changelog-date {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .changelog-list {
+      margin-top: 10px;
+      list-style: none;
+    }
+    .changelog-list li {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      padding-left: 16px;
+      position: relative;
+    }
+    .changelog-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+      color: var(--text-tertiary);
+    }
+
+    @media (max-width: 734px) {
+      .changelog-section h2 { font-size: 28px; }
+    }
+
     /* FAQ / Errors */
     .faq-section {
       padding: 80px 20px;
@@ -781,6 +859,12 @@
     </div>
   </section>
 
+  <!-- Changelog -->
+  <section class="changelog-section fade-in" id="changelog">
+    <h2>更新历史。</h2>
+    <div id="changelogContainer"></div>
+  </section>
+
   <!-- QQ Groups -->
   <section class="panel fade-in" id="groups">
     <div class="panel-inner">
@@ -939,6 +1023,23 @@
             document.querySelectorAll('[data-download-link]').forEach(link => {
               link.href = config.downloadUrl;
             });
+          }
+
+          if (config.changelog && config.changelog.length > 0) {
+            const container = document.getElementById('changelogContainer');
+            if (container) {
+              container.innerHTML = config.changelog.map((item, i) => `
+                <div class="changelog-item${i === 0 ? ' latest' : ''}">
+                  <div class="changelog-ver">
+                    v${item.version}${i === 0 ? '<span class="cl-tag">最新</span>' : ''}
+                  </div>
+                  <div class="changelog-date">${item.date}</div>
+                  <ul class="changelog-list">
+                    ${item.changes.map(c => `<li>${c}</li>`).join('')}
+                  </ul>
+                </div>
+              `).join('');
+            }
           }
 
           return;

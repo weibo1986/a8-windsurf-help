@@ -2,5 +2,31 @@
   "version": "1.2.6",
   "downloadUrl": "/plug/a8-windsurf-helper-latest.vsix",
   "announcement": "修复部分场景下切号串号bug、其他优化，请用户及时更新",
-  "tagline": "安装插件后即可直接使用。"
+  "tagline": "安装插件后即可直接使用。",
+  "changelog": [
+    {
+      "version": "1.2.6",
+      "date": "2025-04-24",
+      "changes": [
+        "修复部分场景下切号串号bug",
+        "其他优化"
+      ]
+    },
+    {
+      "version": "1.2.5",
+      "date": "2025-04-20",
+      "changes": [
+        "移除卡密验证，安装后即可直接使用",
+        "优化切号流程"
+      ]
+    },
+    {
+      "version": "1.2.4",
+      "date": "2025-04-15",
+      "changes": [
+        "新增导入账号功能",
+        "修复已知问题"
+      ]
+    }
+  ]
 }
