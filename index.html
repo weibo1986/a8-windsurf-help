@@ -549,6 +549,30 @@
 
     @media (max-width: 734px) {
       .changelog-section h2 { font-size: 28px; }
+
+      .faq-card {
+        padding: 20px;
+        border-radius: 14px;
+      }
+      .faq-card h3 {
+        font-size: 16px;
+        flex-wrap: wrap;
+        word-break: break-all;
+      }
+      .faq-card p {
+        font-size: 14px;
+        word-break: break-all;
+      }
+      .faq-card .solution {
+        font-size: 14px;
+      }
+      .faq-card .faq-img {
+        margin-top: 12px;
+      }
+      .faq-card .faq-img .img-caption {
+        font-size: 11px;
+        word-break: break-all;
+      }
     }
 
     /* FAQ / Errors */
@@ -803,6 +827,12 @@
     </div>
   </section>
 
+  <!-- Changelog -->
+  <section class="changelog-section fade-in" id="changelog">
+    <h2>更新历史。</h2>
+    <div id="changelogContainer"></div>
+  </section>
+
   <hr class="section-divider">
 
   <!-- Warning -->
@@ -857,12 +887,6 @@
       <a class="btn-fill" href="/plug/a8-windsurf-helper-latest.vsix" target="_blank" data-download-link>下载插件</a>
       <a class="btn-outline" href="https://A8.AL" target="_blank">访问 A8.AL</a>
     </div>
-  </section>
-
-  <!-- Changelog -->
-  <section class="changelog-section fade-in" id="changelog">
-    <h2>更新历史。</h2>
-    <div id="changelogContainer"></div>
   </section>
 
   <!-- QQ Groups -->
