@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A8-WindSurf-Helper 切号插件</title>
+  <style>
+    :root {
+      --text-primary: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #86868b;
+      --bg-white: #fff;
+      --bg-light: #f5f5f7;
+      --blue: #0071e3;
+      --blue-hover: #0077ed;
+      --border: #d2d2d7;
+      --red: #ff3b30;
+      --green: #34c759;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+      background: var(--bg-white);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Announcement Bar */
+    .announce-bar {
+      background: var(--text-primary);
+      color: #fff;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+    .announce-bar strong {
+      color: #64d2ff;
+    }
+    .announce-bar .announce-divider {
+      display: inline-block;
+      width: 1px;
+      height: 12px;
+      background: rgba(255,255,255,0.3);
+      margin: 0 12px;
+      vertical-align: middle;
+    }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    nav .nav-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 22px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav .nav-brand {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    nav .nav-links a {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-left: 28px;
+      transition: color 0.2s;
+    }
+    nav .nav-links a:hover { color: var(--text-primary); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+      background: var(--bg-white);
+    }
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.07;
+      color: var(--text-primary);
+    }
+    .hero .subtitle {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      letter-spacing: -0.01em;
+    }
+    .hero .version {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--bg-white);
+      background: var(--text-primary);
+      padding: 6px 18px;
+      border-radius: 980px;
+      font-weight: 500;
+    }
+    .hero .tagline {
+      margin-top: 16px;
+      font-size: 17px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+    }
+    .hero .hero-cta {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero .hero-cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 17px;
+      font-weight: 400;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .hero .hero-cta a:hover { opacity: 0.78; }
+    .hero .hero-cta .cta-primary {
+      background: var(--blue);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 980px;
+      font-weight: 500;
+    }
+    .hero .hero-cta .cta-secondary {
+      color: var(--blue);
+      padding: 12px 8px;
+    }
+    .hero .hero-cta .cta-secondary::after {
+      content: ' >';
+      font-size: 15px;
+    }
+
+    /* Section */
+    .section {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 0 auto;
+      max-width: 980px;
+    }
+
+    /* Panel (dark bg like Apple product pages) */
+    .panel {
+      background: var(--bg-light);
+      padding: 80px 20px;
+    }
+    .panel .panel-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .panel h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .panel .panel-sub {
+      font-size: 17px;
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    /* QQ Group grid */
+    .group-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .group-card {
+      background: var(--bg-white);
+      border-radius: 20px;
+      padding: 40px 30px 36px;
+      text-align: center;
+      transition: transform 0.35s cubic-bezier(.25,.1,.25,1), box-shadow 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+    .group-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: 20px 20px 0 0;
+    }
+    .group-card.card-a::before { background: linear-gradient(90deg, #ff3b30, #ff9500); }
+    .group-card.card-b::before { background: linear-gradient(90deg, #34c759, #30d158); }
+    .group-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+    .group-card .gicon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .group-card.card-a .gicon { background: #fff1f0; }
+    .group-card.card-b .gicon { background: #e8f8ee; }
+    .group-card .glabel {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .group-card .gnum {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .group-card .gstatus {
+      display: inline-block;
+      font-size: 12px;
+      margin: 10px 0 20px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 980px;
+    }
+    .group-card .gstatus.full {
+      color: var(--red);
+      background: rgba(255, 59, 48, 0.08);
+    }
+    .group-card .gstatus.open {
+      color: var(--green);
+      background: rgba(52, 199, 89, 0.1);
+    }
+    .group-card .glink {
+      display: inline-block;
+      font-size: 14px;
+      color: var(--bg-white);
+      background: var(--blue);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 10px 28px;
+      border-radius: 980px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .group-card .glink:hover {
+      background: var(--blue-hover);
+      transform: scale(1.04);
+    }
+
+    /* Compat row */
+    .compat-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+    .compat-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+    }
+    .compat-row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .compat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .compat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .compat-icon.ok { background: #e8f8ee; color: var(--green); }
+    .compat-icon.no { background: #fef0ef; color: var(--red); }
+    .compat-label { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+
+    /* Warning */
+    .warning-panel {
+      background: var(--text-primary);
+      color: #fff;
+      padding: 80px 20px;
+    }
+    .warning-panel .wp-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .warning-panel h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .warning-panel p {
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 12px;
+    }
+    .warning-panel strong { color: #fff; }
+    .warning-panel a {
+      color: #64d2ff;
+      text-decoration: none;
+    }
+    .warning-panel a:hover { text-decoration: underline; }
+
+    /* Steps */
+    .steps-section {
+      padding: 80px 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .steps-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .step-row {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 36px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .step-body h3 {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .step-body p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .step-body a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .step-body a:hover { text-decoration: underline; }
+
+    .cta-center {
+      text-align: center;
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .btn-fill {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 980px;
+      font-size: 17px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-fill:hover { background: var(--blue-hover); }
+    .btn-outline {
+      display: inline-block;
+      border: 1px solid var(--blue);
+      color: var(--blue);
+      padding: 13px 32px;
+      border-radius: 980px;
+      font-size: 17px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { background: var(--blue); color: #fff; }
+
+    /* Notes */
+    .notes-panel {
+      background: var(--bg-light);
+      padding: 80px 20px;
+    }
+    .notes-panel .np-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .notes-panel h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .note-item {
+      background: var(--bg-white);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      display: flex;
+      gap: 14px;
+      align-items: baseline;
+    }
+    .note-item .ni-num {
+      flex-shrink: 0;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 15px;
+    }
+
+    /* FAQ / Errors */
+    .faq-section {
+      padding: 80px 20px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .faq-section h2 {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .faq-section .faq-sub {
+      font-size: 17px;
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .faq-search {
+      max-width: 480px;
+      margin: 0 auto 40px;
+      position: relative;
+    }
+    .faq-search input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      font-size: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-light);
+      color: var(--text-primary);
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .faq-search input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+      background: var(--bg-white);
+    }
+    .faq-search input::placeholder {
+      color: var(--text-tertiary);
+    }
+    .faq-search .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-tertiary);
+    }
+    .faq-card.hidden {
+      display: none;
+    }
+    .faq-no-result {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-tertiary);
+      font-size: 15px;
+      display: none;
+    }
+    .faq-card {
+      background: var(--bg-light);
+      border-radius: 18px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .faq-card h3 {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .faq-card h3 .faq-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 980px;
+      background: rgba(255, 59, 48, 0.08);
+      color: var(--red);
+      letter-spacing: 0.02em;
+    }
+    .faq-card p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .faq-card .solution {
+      font-size: 15px;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .faq-card .solution::before {
+      content: '\2713  ';
+    }
+    .faq-card .faq-img {
+      margin-top: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .faq-card .faq-img img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .faq-card .faq-img .img-caption {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    /* Footer */
+    footer {
+      padding: 30px 22px;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+    }
+    footer p {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 734px) {
+      .hero h1 { font-size: 36px; }
+      .hero .subtitle { font-size: 20px; }
+      .panel h2, .compat-section h2, .warning-panel h2,
+      .steps-section h2, .notes-panel h2, .faq-section h2 { font-size: 28px; }
+      .group-grid { grid-template-columns: 1fr; }
+      .group-card .gnum { font-size: 26px; }
+      .compat-row { gap: 24px; }
+    }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(.25,.1,.25,1), transform 0.7s cubic-bezier(.25,.1,.25,1);
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Watermark */
+    .watermark {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.09;
+    }
+  </style>
+</head>
+<body>
+  <div class="watermark"></div>
+
+  <!-- Announcement -->
+  <div class="announce-bar">
+    <strong>最新版本</strong> 插件 v1.2.5 已发布
+    <span class="announce-divider"></span>
+    现已改为安装后即可直接使用
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-brand">A8-WindSurf-Helper</div>
+      <div class="nav-links">
+        <a href="#download">下载</a>
+        <a href="#guide">教程</a>
+        <a href="#groups">社群</a>
+        <a href="#faq">常见问题</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>A8-WindSurf-Helper</h1>
+    <div class="subtitle">切号插件，简单高效。</div>
+    <span class="version">v1.2.5</span>
+    <p class="tagline">安装插件后即可直接使用。</p>
+    <div class="hero-cta">
+      <a class="cta-primary" href="https://plug.a8.al/a8-windsurf-helper-1.2.5.vsix" target="_blank" id="download">下载插件</a>
+      <a class="cta-secondary" href="https://A8.AL" target="_blank">访问 A8.AL</a>
+    </div>
+  </section>
+
+  <!-- Compatibility -->
+  <section class="compat-section section fade-in">
+    <h2>兼容性</h2>
+    <div class="compat-row">
+      <div class="compat-item">
+        <div class="compat-icon ok">&#10003;</div>
+        <div class="compat-label">Windows</div>
+      </div>
+      <div class="compat-item">
+        <div class="compat-icon ok">&#10003;</div>
+        <div class="compat-label">macOS</div>
+      </div>
+      <div class="compat-item">
+        <div class="compat-icon no">&#10005;</div>
+        <div class="compat-label">Linux（未兼容）</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- Warning -->
+  <section class="warning-panel fade-in">
+    <div class="wp-inner">
+      <h2>使用前，请务必阅读。</h2>
+      <p>使用插件前请先<strong>完整卸载清除积分放大器</strong>，否则会导致封号。</p>
+      <p>卸载后请使用 <strong>Geek 卸载工具</strong>彻底卸载 WindSurf 软件并清除用户注册表。</p>
+      <p style="margin-top:8px;">
+        <a href="https://geekuninstaller.com/" target="_blank">下载 Geek Uninstaller &gt;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section class="steps-section fade-in" id="guide">
+    <h2>四步上手。</h2>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>获取插件</h3>
+        <p>从 QQ 群文件下载，或前往 <a href="https://plug.a8.al/a8-windsurf-helper-1.2.5.vsix" target="_blank">插件下载页</a> 直接下载。</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>安装插件</h3>
+        <p>将下载好的插件直接拖入 WindSurf，安装成功后左侧出现插件图标。</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>导入账号</h3>
+        <p>点击左侧插件图标，导入账号信息并完成切换。</p>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>开始使用</h3>
+        <p>导入完成后即可直接开始使用，无需额外认证。</p>
+      </div>
+    </div>
+
+    <div class="cta-center">
+      <a class="btn-fill" href="https://plug.a8.al/a8-windsurf-helper-1.2.5.vsix" target="_blank">下载插件</a>
+      <a class="btn-outline" href="https://A8.AL" target="_blank">访问 A8.AL</a>
+    </div>
+  </section>
+
+  <!-- QQ Groups -->
+  <section class="panel fade-in" id="groups">
+    <div class="panel-inner">
+      <h2>加入社群。</h2>
+      <p class="panel-sub">获取插件、更新通知及售后支持</p>
+      <div class="group-grid">
+        <div class="group-card card-a">
+          <div class="gicon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="glabel">QQ 群</div>
+          <div class="gnum">701087149</div>
+          <div class="gstatus full">已满员</div>
+          <a class="glink" href="https://qm.qq.com/q/g5tCHIPL9e" target="_blank">加入群聊</a>
+        </div>
+        <div class="group-card card-b">
+          <div class="gicon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34c759" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="glabel">QQ 群</div>
+          <div class="gnum">870315692</div>
+          <div class="gstatus open">可加入</div>
+          <a class="glink" href="https://qm.qq.com/q/sutwRJPaBc" target="_blank">加入群聊</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FAQ / Errors -->
+  <section class="faq-section fade-in" id="faq">
+    <h2>常见问题排查。</h2>
+    <p class="faq-sub">遇到以下问题？对照截图和解决方案操作即可</p>
+    <div class="faq-search">
+      <span class="search-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" id="faqSearch" placeholder="搜索错误关键词，如：free、密码、导入...">
+    </div>
+    <div class="faq-no-result" id="faqNoResult">没有找到匹配的问题，请尝试其他关键词。</div>
+
+    <!-- Error 1 -->
+    <div class="faq-card">
+      <h3>
+        <span class="faq-tag">错误</span>
+        导入账号失败
+      </h3>
+      <p>网络不可用，中转和直连均失败，通常是网络连接问题。</p>
+      <p class="solution">尝试开启代理后重新导入，或关闭所有代理重启WindSurf客户端导入，检查网络连接是否正常。</p>
+      <div class="faq-img">
+        <img src="images/network_error.png" alt="导入账号失败截图">
+        <div class="img-caption">导入失败的典型提示界面</div>
+      </div>
+    </div>
+
+    <!-- Error 2 -->
+    <div class="faq-card">
+      <h3>
+        <span class="faq-tag">错误</span>
+        账号显示 free 状态
+      </h3>
+      <p>导入账号成功后，账号状态显示为 free，未正确识别订阅。</p>
+      <p class="solution">点击刷新状态按钮即可恢复正常。</p>
+      <div class="faq-img">
+        <img src="images//email_free.png" alt="free 状态截图">
+        <div class="img-caption">账号显示 free 状态的截图</div>
+      </div>
+    </div>
+
+    <!-- Error 3 -->
+    <div class="faq-card">
+      <h3>
+        <span class="faq-tag">错误</span>
+        配额获取失败:Your account has been migrated. Please log in again.
+      </h3>
+      <p>配额获取失败:Your account has been migrated. Please log in again.</p>
+      <p class="solution">请导出账号删除账号重新导入账号以获取最新配额信息。</p>
+      <div class="faq-img">
+        <img src="images/please_error.png" alt="邮箱或密码错误截图">
+        <div class="img-caption">配额获取失败:Your account has been migrated. Please log in again.</div>
+      </div>
+    </div>
+
+    <div class="faq-card">
+      <h3>
+        <span class="faq-tag">错误</span>
+        邮箱或密码错误
+      </h3>
+      <p>导入账号时提示邮箱或密码错误。</p>
+      <p class="solution">请将插件更新到最新版本后使用，请检查邮箱和密码是否正确，或联系客服获取帮助。</p>
+      <div class="faq-img">
+        <img src="images/password_error.png" alt="邮箱或密码错误截图">
+        <div class="img-caption">邮箱或密码错误的提示界面</div>
+      </div>
+    </div>
+
+     <div class="faq-card">
+      <h3>
+        <span class="faq-tag">错误</span>
+        切换超时，状态校验未通过，配额获取失败
+      </h3>
+      <p>切换超时，状态校验未通过，配额获取失败。</p>
+      <p class="solution">基本为网络问题，请尝试开启代理后使用，或关闭所有代理重启WindSurf客户端导入，检查网络连接是否正常。</p>
+      <div class="faq-img">
+        <img src="images/timeout_error.png" alt="切换超时截图">
+        <div class="img-caption">切换超时，状态校验未通过，配额获取失败</div>
+      </div>
+    </div>
+
+
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>A8-WindSurf-Helper &copy; 2025 &nbsp;|&nbsp; <a href="https://A8.AL" target="_blank">A8.AL</a></p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // FAQ Search
+    const searchInput = document.getElementById('faqSearch');
+    const faqCards = document.querySelectorAll('.faq-card');
+    const noResult = document.getElementById('faqNoResult');
+
+    searchInput.addEventListener('input', function() {
+      const query = this.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      faqCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      noResult.style.display = (query && visibleCount === 0) ? 'block' : 'none';
+    });
+
+    // Watermark
+    (function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 200;
+      canvas.height = 200;
+      ctx.translate(100, 100);
+      ctx.rotate(-25 * Math.PI / 180);
+      ctx.font = '600 22px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = '#000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('A8.AL', 0, 0);
+      const el = document.querySelector('.watermark');
+      el.style.backgroundImage = 'url(' + canvas.toDataURL() + ')';
+      el.style.backgroundRepeat = 'repeat';
+    })();
+  </script>
+</body>
+</html>
