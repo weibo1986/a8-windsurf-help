@@ -850,6 +850,37 @@
       transform: translateY(0);
     }
 
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      right: 24px;
+      bottom: 32px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 998;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    }
+    .back-to-top.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .back-to-top:hover {
+      background: var(--blue);
+    }
+
     /* Watermark */
     .watermark {
       position: fixed;
@@ -1140,6 +1171,11 @@
 
   </section>
 
+  <!-- Back to top -->
+  <button class="back-to-top" id="backToTop" title="返回顶部">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
   <!-- Footer -->
   <footer>
     <p>A8-WindSurf-Helper &copy; 2025 &nbsp;|&nbsp; <a href="https://A8.AL" target="_blank">A8.AL</a></p>
@@ -1260,6 +1296,18 @@
       const el = document.querySelector('.watermark');
       el.style.backgroundImage = 'url(' + canvas.toDataURL() + ')';
       el.style.backgroundRepeat = 'repeat';
+    })();
+
+    // Back to top
+    (function() {
+      const btn = document.getElementById('backToTop');
+      if (!btn) return;
+      window.addEventListener('scroll', () => {
+        btn.classList.toggle('show', window.scrollY > 400);
+      });
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     })();
 
     // Dynamic layout: position nav below announcement bar
