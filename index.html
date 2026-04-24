@@ -61,7 +61,7 @@
     /* Nav */
     nav {
       position: fixed;
-      top: 40px;
+      top: 0;
       left: 0;
       right: 0;
       z-index: 100;
@@ -611,6 +611,33 @@
 
     /* Responsive */
     @media (max-width: 734px) {
+      body { padding-top: 100px; }
+
+      .announce-bar {
+        font-size: 12px;
+        padding: 8px 16px;
+        line-height: 1.4;
+      }
+
+      nav {
+        top: 0;
+      }
+
+      nav .nav-inner {
+        height: 44px;
+        padding: 0 16px;
+      }
+
+      nav .nav-brand {
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      nav .nav-links a {
+        font-size: 0.72rem;
+        margin-left: 16px;
+      }
+
       .hero h1 { font-size: 36px; }
       .hero .subtitle { font-size: 20px; }
       .panel h2, .compat-section h2, .warning-panel h2,
@@ -969,6 +996,23 @@
       const el = document.querySelector('.watermark');
       el.style.backgroundImage = 'url(' + canvas.toDataURL() + ')';
       el.style.backgroundRepeat = 'repeat';
+    })();
+
+    // Dynamic layout: position nav below announcement bar
+    (function() {
+      const bar = document.querySelector('.announce-bar');
+      const nav = document.querySelector('nav');
+      if (!bar || !nav) return;
+
+      function adjustLayout() {
+        const barH = bar.offsetHeight;
+        const navH = nav.offsetHeight;
+        nav.style.top = barH + 'px';
+        document.body.style.paddingTop = (barH + navH) + 'px';
+      }
+
+      adjustLayout();
+      window.addEventListener('resize', adjustLayout);
     })();
   </script>
 </body>
