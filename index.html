@@ -28,10 +28,16 @@
       color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      padding-top: 88px;
     }
 
     /* Announcement Bar */
     .announce-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 101;
       background: var(--text-primary);
       color: #fff;
       text-align: center;
@@ -54,8 +60,10 @@
 
     /* Nav */
     nav {
-      position: sticky;
-      top: 0;
+      position: fixed;
+      top: 40px;
+      left: 0;
+      right: 0;
       z-index: 100;
       background: rgba(255, 255, 255, 0.72);
       backdrop-filter: saturate(180%) blur(20px);
@@ -643,7 +651,7 @@
   <div class="announce-bar">
     <strong>最新版本</strong> 插件 v1.2.5 已发布
     <span class="announce-divider"></span>
-    现已改为安装后即可直接使用
+    此版本已移除卡密，无需卡密验证，请用户及时更新
   </div>
 
   <!-- Nav -->
@@ -666,7 +674,7 @@
     <span class="version">v1.2.5</span>
     <p class="tagline">安装插件后即可直接使用。</p>
     <div class="hero-cta">
-      <a class="cta-primary" href="plug/a8-windsurf-helper-latest.vsix" target="_blank" id="download">下载插件</a>
+      <a class="cta-primary" href="https://plug.a8.al/a8-windsurf-helper-1.2.5.vsix" target="_blank" id="download">下载插件</a>
       <a class="cta-secondary" href="https://A8.AL" target="_blank">访问 A8.AL</a>
     </div>
   </section>
@@ -712,7 +720,7 @@
       <div class="step-num">1</div>
       <div class="step-body">
         <h3>获取插件</h3>
-        <p>从 QQ 群文件下载，或前往 <a href="plug/a8-windsurf-helper-latest.vsix" target="_blank">插件下载页</a> 直接下载。</p>
+        <p>从 QQ 群文件下载，或前往 <a href="https://plug.a8.al/a8-windsurf-helper-1.2.5.vsix" target="_blank">插件下载页</a> 直接下载。</p>
       </div>
     </div>
 
@@ -741,7 +749,7 @@
     </div>
 
     <div class="cta-center">
-      <a class="btn-fill" href="plug/a8-windsurf-helper-latest.vsix" target="_blank">下载插件</a>
+      <a class="btn-fill" href="https://plug.a8.al/a8-windsurf-helper-1.2.5.vsix" target="_blank">下载插件</a>
       <a class="btn-outline" href="https://A8.AL" target="_blank">访问 A8.AL</a>
     </div>
   </section>
