@@ -1,9 +1,19 @@
 {
-  "version": "1.2.6",
+  "version": "1.2.7",
   "downloadUrl": "/plug/a8-windsurf-helper-latest.vsix",
-  "announcement": "修复部分场景下切号串号bug、其他优化，请用户及时更新",
+  "announcement": "v1.2.7 新增列表脱敏显示、自动切号可选额度、按域名分组优化，请及时更新",
   "tagline": "安装插件后即可直接使用。",
   "changelog": [
+    {
+      "version": "1.2.7",
+      "date": "2025-04-30",
+      "changes": [
+        "新增列表脱敏显示",
+        "自动切号支持可选额度",
+        "优化按域名分组",
+        "列表分组增加总额度显示"
+      ]
+    },
     {
       "version": "1.2.6",
       "date": "2025-04-24",
